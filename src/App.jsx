@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Main from "./components/Main";
 import Navbar from "./components/Navbar";
 import Box from "./components/Box";
-import WatchedBox from "./components/WatchedBox";
 import MovieList from "./components/MovieList";
 import WatchedSummary from "./components/WatchedSummary";
 import WatchedMovieList from "./components/WatchedMovieList";
@@ -55,13 +54,37 @@ const tempWatchedData = [
   },
 ];
 
+function getInitialTheme() {
+  const savedTheme = localStorage.getItem("popcorn-theme");
+
+  if (savedTheme) {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
 function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
 
+  const [theme, setTheme] = useState(getInitialTheme);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+
+    localStorage.setItem("popcorn-theme", theme);
+  }, [theme]);
+
+  function handleToggleTheme() {
+    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
+  }
+
   return (
     <>
-      <Navbar movies={movies} />
+      <Navbar movies={movies} theme={theme} onToggleTheme={handleToggleTheme} />
 
       <Main>
         <Box>
@@ -70,7 +93,6 @@ function App() {
 
         <Box>
           <WatchedSummary watched={watched} />
-
           <WatchedMovieList watched={watched} />
         </Box>
       </Main>
