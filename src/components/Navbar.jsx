@@ -1,6 +1,6 @@
 import Search from "./Search";
 
-function Navbar() {
+function Navbar({ movies }) {
   return (
     <nav className="nav-bar">
       <div className="logo">
@@ -9,7 +9,7 @@ function Navbar() {
       </div>
       <Search />
       <p className="num-results">
-        Found <strong>X</strong> results
+        Found <strong>{movies.length}</strong> results
       </p>
     </nav>
   );
