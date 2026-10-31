@@ -3,9 +3,10 @@ import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 import StarRating from "./StarRating";
 import { X } from "lucide-react";
 
-function MovieDetails({ selectedId, KEY, onCloseMovie }) {
+function MovieDetails({ selectedId, KEY, onCloseMovie, onAddWatched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
 
   useEffect(
     function () {
@@ -29,9 +30,34 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
     [selectedId, KEY],
   );
 
-  function handleSetRating(rating) {
-    console.log("User Rating:", rating);
-  }
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+    Rated: rated,
+  } = movie;
+
+  const handleAdd = () => {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating,
+    };
+
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  };
 
   if (isLoading) return <MovieDetailsSkeleton />;
 
@@ -47,31 +73,29 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
       {/* Movie Header */}
       <div className="flex gap-4">
         <img
-          src={movie.Poster}
-          alt={`${movie.Title} poster`}
+          src={poster}
+          alt={`${title} poster`}
           className="h-40 w-28 shrink-0 rounded-xl object-cover shadow-lg"
         />
 
         <div className="flex min-w-0 flex-col justify-center gap-2">
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
-            {movie.Title}
+            {title}
           </h2>
 
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {movie.Year} · {movie.Runtime}
+            {year} · {runtime}
           </p>
 
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {movie.Genre}
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{genre}</p>
 
           <div className="flex flex-wrap gap-2">
             <span className="rounded-lg bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700 dark:bg-amber-400/10 dark:text-amber-400">
-              ⭐ {movie.imdbRating}
+              ⭐ {imdbRating}
             </span>
 
             <span className="rounded-lg bg-zinc-100 px-3 py-1 text-sm font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-              {movie.Rated}
+              {rated}
             </span>
           </div>
         </div>
@@ -83,7 +107,16 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
           Rate this movie
         </p>
 
-        <StarRating maxRating={10} onSetRating={handleSetRating} />
+        <StarRating maxRating={10} onSetRating={setUserRating} />
+
+        {userRating > 0 && (
+          <button
+            onClick={handleAdd}
+            className="mt-4 w-full rounded-xl bg-popcorn px-4 py-3 text-sm font-bold text-zinc-900 shadow-sm transition hover:bg-popcorn-dark hover:shadow-md active:scale-[0.98]"
+          >
+            Add to List
+          </button>
+        )}
       </div>
 
       {/* Plot */}
@@ -93,7 +126,7 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
         </h3>
 
         <p className="text-sm leading-7 text-zinc-600 dark:text-zinc-400">
-          {movie.Plot}
+          {plot}
         </p>
       </div>
 
@@ -103,18 +136,14 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
           <h4 className="mb-1 text-xs font-semibold uppercase text-zinc-400">
             Director
           </h4>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">
-            {movie.Director}
-          </p>
+          <p className="text-sm text-zinc-700 dark:text-zinc-300">{director}</p>
         </div>
 
         <div>
           <h4 className="mb-1 text-xs font-semibold uppercase text-zinc-400">
             Released
           </h4>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">
-            {movie.Released}
-          </p>
+          <p className="text-sm text-zinc-700 dark:text-zinc-300">{released}</p>
         </div>
 
         <div className="col-span-2">
@@ -122,7 +151,7 @@ function MovieDetails({ selectedId, KEY, onCloseMovie }) {
             Cast
           </h4>
           <p className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">
-            {movie.Actors}
+            {actors}
           </p>
         </div>
       </div>
