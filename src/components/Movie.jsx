@@ -1,8 +1,11 @@
-function Movie({ movie }) {
+function Movie({ movie, onSelectMovie }) {
   const hasPoster = movie.Poster && movie.Poster !== "N/A";
 
   return (
-    <li className="group flex min-w-0 gap-3 py-3.5 first:pt-0 last:pb-0 sm:gap-4 sm:py-4">
+    <li
+      className="group flex min-w-0 gap-3 py-3.5 first:pt-0 last:pb-0 sm:gap-4 sm:py-4 cursor-pointer"
+      onClick={() => onSelectMovie(movie.imdbID)}
+    >
       <div className="h-24 w-17 shrink-0 overflow-hidden rounded-lg bg-zinc-100 shadow-sm ring-1 ring-black/5 dark:bg-zinc-800 dark:ring-white/10 sm:h-28 sm:w-19 lg:h-32 lg:w-21.5">
         {hasPoster ? (
           <img

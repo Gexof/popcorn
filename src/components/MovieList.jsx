@@ -1,6 +1,6 @@
 import Movie from "./Movie";
 
-function MovieList({ movies }) {
+function MovieList({ movies, onSelectMovie }) {
   if (!movies?.length) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center gap-3 px-4 text-center">
@@ -22,7 +22,7 @@ function MovieList({ movies }) {
   return (
     <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
       {movies.map((movie) => (
-        <Movie key={movie.imdbID} movie={movie} />
+        <Movie key={movie.imdbID} movie={movie} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   );

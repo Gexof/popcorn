@@ -1,6 +1,6 @@
 import Search from "./Search";
 
-function Navbar({ movies, theme, onToggleTheme }) {
+function Navbar({ movies, theme, onToggleTheme, query, setQuery }) {
   const isDark = theme === "dark";
 
   return (
@@ -27,7 +27,7 @@ function Navbar({ movies, theme, onToggleTheme }) {
 
         {/* Search */}
         <div className="order-3 w-full md:order-2 md:max-w-xl md:flex-1 md:px-8">
-          <Search />
+          <Search query={query} setQuery={setQuery} />
         </div>
 
         {/* Actions */}
@@ -37,10 +37,10 @@ function Navbar({ movies, theme, onToggleTheme }) {
             <span className="h-2 w-2 rounded-full bg-amber-400" />
 
             <p className="whitespace-nowrap text-xs font-medium text-zinc-600 dark:text-zinc-400 sm:text-sm">
-              Found{" "}
+              Found
               <strong className="font-bold text-zinc-950 dark:text-white">
-                {movies.length}
-              </strong>{" "}
+                {movies?.length}
+              </strong>
               results
             </p>
           </div>
