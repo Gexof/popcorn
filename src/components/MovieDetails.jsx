@@ -3,10 +3,22 @@ import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 import StarRating from "./StarRating";
 import { X } from "lucide-react";
 
-function MovieDetails({ selectedId, KEY, onCloseMovie, onAddWatched }) {
+function MovieDetails({
+  selectedId,
+  KEY,
+  onCloseMovie,
+  onAddWatched,
+  watched,
+}) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId,
+  )?.userRating;
 
   useEffect(
     function () {
@@ -103,19 +115,25 @@ function MovieDetails({ selectedId, KEY, onCloseMovie, onAddWatched }) {
 
       {/* User Rating */}
       <div className="rounded-xl bg-zinc-100 p-4 dark:bg-zinc-800/60">
-        <p className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-          Rate this movie
-        </p>
+        {!isWatched ? (
+          <>
+            <p className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              Rate this movie
+            </p>
 
-        <StarRating maxRating={10} onSetRating={setUserRating} />
+            <StarRating maxRating={10} onSetRating={setUserRating} />
 
-        {userRating > 0 && (
-          <button
-            onClick={handleAdd}
-            className="mt-4 w-full rounded-xl bg-popcorn px-4 py-3 text-sm font-bold text-zinc-900 shadow-sm transition hover:bg-popcorn-dark hover:shadow-md active:scale-[0.98]"
-          >
-            Add to List
-          </button>
+            {userRating > 0 && (
+              <button
+                onClick={handleAdd}
+                className="mt-4 w-full rounded-xl bg-popcorn px-4 py-3 text-sm font-bold text-zinc-900 shadow-sm transition hover:bg-popcorn-dark hover:shadow-md active:scale-[0.98]"
+              >
+                Add to List
+              </button>
+            )}
+          </>
+        ) : (
+          <p>You Rated this movie {watchedUserRating}</p>
         )}
       </div>
 

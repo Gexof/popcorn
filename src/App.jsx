@@ -125,6 +125,7 @@ function App() {
               KEY={KEY}
               onCloseMovie={handleCloseMovie}
               onAddWatched={handleAddWatched}
+              watched={watched}
             />
           ) : (
             <>
