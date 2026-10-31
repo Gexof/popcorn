@@ -1,4 +1,6 @@
-function WatchedMovie({ movie }) {
+import { Trash2 } from "lucide-react";
+
+function WatchedMovie({ movie, onDeleteWatched }) {
   const hasPoster = movie.poster && movie.poster !== "N/A";
 
   return (
@@ -43,6 +45,14 @@ function WatchedMovie({ movie }) {
           </p>
         </div>
       </div>
+      <button
+        onClick={() => onDeleteWatched(movie.imdbID)}
+        aria-label={`Delete ${movie.title} from watched list`}
+        title={`Remove ${movie.title} from watched list`}
+        className="ml-auto shrink-0 self-center rounded-lg p-2 text-zinc-400 transition hover:bg-red-500/10 hover:text-red-500 active:scale-95 dark:text-zinc-500 dark:hover:bg-red-500/10 dark:hover:text-red-400"
+      >
+        <Trash2 size={18} />
+      </button>
     </li>
   );
 }

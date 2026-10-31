@@ -1,6 +1,6 @@
 import WatchedMovie from "./WatchedMovie";
 
-function WatchedMovieList({ watched }) {
+function WatchedMovieList({ watched, onDeleteWatched }) {
   if (!watched.length) {
     return (
       <div className="flex min-h-48 flex-col items-center justify-center gap-3 px-4 text-center">
@@ -22,7 +22,11 @@ function WatchedMovieList({ watched }) {
   return (
     <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
       {watched.map((movie) => (
-        <WatchedMovie key={movie.imdbID} movie={movie} />
+        <WatchedMovie
+          key={movie.imdbID}
+          movie={movie}
+          onDeleteWatched={onDeleteWatched}
+        />
       ))}
     </ul>
   );
