@@ -56,6 +56,16 @@ function MovieDetails({
     Rated: rated,
   } = movie;
 
+  useEffect(() => {
+    if (!title) return;
+
+    document.title = `${title}`;
+
+    return () => {
+      document.title = "Popcorn";
+    };
+  }, [title]);
+
   const handleAdd = () => {
     const newWatchedMovie = {
       imdbID: selectedId,
