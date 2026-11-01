@@ -1,4 +1,12 @@
+import { useEffect, useRef } from "react";
+
 function Search({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    inputEl.current.focus();
+  });
+
   return (
     <div className="group relative w-full">
       {/* Search Icon */}
@@ -23,6 +31,7 @@ function Search({ query, setQuery }) {
         aria-label="Search movies"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        ref={inputEl}
       />
     </div>
   );
