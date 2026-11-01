@@ -42,6 +42,20 @@ function MovieDetails({
     [selectedId, KEY],
   );
 
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === "Escape") {
+        onCloseMovie();
+      }
+    };
+
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onCloseMovie]);
+
   const {
     Title: title,
     Year: year,
@@ -87,21 +101,31 @@ function MovieDetails({
     <div className="flex flex-col gap-5">
       <button
         onClick={onCloseMovie}
-        className="flex w-fit items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+        aria-label="Close movie details"
+        title="Close"
+        className="flex w-fit items-center justify-center rounded-lg p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
       >
-        <X size={18} />
+        <X size={20} />
       </button>
 
       {/* Movie Header */}
       <div className="flex gap-4">
-        <img
-          src={poster}
-          alt={`${title} poster`}
-          className="h-40 w-28 shrink-0 rounded-xl object-cover shadow-lg"
-        />
+        <div className="h-40 w-28 shrink-0 overflow-hidden rounded-xl bg-zinc-200 shadow-lg dark:bg-zinc-800">
+          {poster && poster !== "N/A" ? (
+            <img
+              src={poster}
+              alt={`${title} poster`}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-3xl">
+              🎬
+            </div>
+          )}
+        </div>
 
         <div className="flex min-w-0 flex-col justify-center gap-2">
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+          <h2 className="line-clamp-2 text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-100">
             {title}
           </h2>
 
@@ -143,7 +167,20 @@ function MovieDetails({
             )}
           </>
         ) : (
-          <p>You Rated this movie {watchedUserRating}</p>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                Your Rating
+              </p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                Your personal rating for this movie
+              </p>
+            </div>
+
+            <span className="rounded-lg bg-amber-100 px-3 py-2 text-sm font-bold text-amber-700 dark:bg-amber-400/10 dark:text-amber-400">
+              ⭐ {watchedUserRating}/10
+            </span>
+          </div>
         )}
       </div>
 
@@ -159,7 +196,7 @@ function MovieDetails({
       </div>
 
       {/* Additional Information */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
         <div>
           <h4 className="mb-1 text-xs font-semibold uppercase text-zinc-400">
             Director
