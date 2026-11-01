@@ -26,7 +26,10 @@ const KEY = "5ff960f7";
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() => {
+    const storedValue = localStorage.getItem("watched");
+    return JSON.parse(storedValue);
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -57,6 +60,8 @@ function App() {
 
   const handleAddWatched = (movie) => {
     setWatched((prev) => [...prev, movie]);
+
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   };
 
   const handleDeleteWatched = (id) => {
@@ -73,7 +78,7 @@ function App() {
         setError("");
 
         const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${KEY}&s=${encodeURIComponent(query)}`,
+          `https://www.omdbapi.com/?apikey=${KEY}&s=${encodeURIComponent(query.trim())}`,
           { signal: controller.signal },
         );
 
@@ -92,11 +97,14 @@ function App() {
           setMovies([]);
         }
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 
     if (query.trim().length < 3) {
+      // *** TODO: FIX THE ISSUE OF  Error: Calling setState synchronously within an effect can trigger cascading renders
       setMovies([]);
       setError("");
       setIsLoading(false);
@@ -110,6 +118,10 @@ function App() {
       controller.abort();
     };
   }, [query]);
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
